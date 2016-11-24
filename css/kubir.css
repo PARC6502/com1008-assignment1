@@ -1,0 +1,57 @@
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  height: 150px;
+}
+
+#logo {
+  max-height: 100%;
+  max-width: 50%;
+  float: left;
+  display: block;
+}
+header > h1 {
+  max-width: 50%;
+  margin-left: 50%;
+  padding-top: 70px;
+  /*padding-le: 5%;*/
+  text-align: center;
+}
+
+
+
+/*Menu for mobile*/
+nav > label {
+  text-align: center;
+  display: block;
+  padding: 18px 0px;
+}
+#menu {
+  display: none;
+  margin: 0;
+  padding: 0;
+  border-width: 0px;
+}
+#menu-toggle {display: none;}
+#menu-toggle:checked + #menu {display: block;}
+#menu > li {
+  height: 50px;
+  display: block;
+  list-style: none;
+  text-align: center;
+}
+#menu > li > a {
+  text-decoration: none;
+  display: block;
+  color: black;
+  padding-top: 18px;
+}
+#home-button {background: #ff9900;}
+#games-button {background: #9900ff;}
+#news-button {background: #009e0f;}
+#founders-button {background: #2b78e4;}
+#contact-button {background: #e06666;}
