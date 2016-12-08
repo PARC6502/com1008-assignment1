@@ -1,3 +1,10 @@
+form {width: 70%;}
+input[type=text], input[type=email] {
+  width:100%;
+}
+textarea {
+  width:100%;
+}
 /*Mobile CSS*/
 body {
   width: 100%;
@@ -84,6 +91,12 @@ header > h1 {
 
 /*first break point*/
 @media (min-width: 34em) {
+  main {
+    font-size: 1em;
+    max-width: 51em;
+    padding: 0 2.5em;
+  }
+  /*Menu*/
   #menu-toggle, #menu-button {display: none;}
   nav {width: 100%;}
   #menu {
