@@ -114,4 +114,14 @@ header > h1 {
     margin:0;
     display: block;
   }
+  /*Founders*/
+  .founder-photo {
+    max-width: 40%;
+    display: inline-block;
+    /*float: left;*/
+  }
+  /*.founder-profile {float:clear;}*/
+  .founder-bio {
+    display: inline-block;
+    max-width: 55%;}
 }
