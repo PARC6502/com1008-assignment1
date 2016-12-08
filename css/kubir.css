@@ -1,7 +1,13 @@
+/*Mobile CSS*/
 body {
   width: 100%;
   margin: 0;
   padding: 0;
+}
+
+main {
+  font-size: 0.9em;
+  padding: 0 1.5em;
 }
 
 header {
@@ -25,10 +31,17 @@ header > h1 {
 
 
 /*Menu for mobile*/
-nav > label {
+#menu-button {
   text-align: center;
   display: block;
-  padding: 18px 0px;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid;
+}
+#menu-button img {
+  height: 40px;
+  padding-top: 5px;
+  float: right;
 }
 #menu {
   display: none;
@@ -38,13 +51,13 @@ nav > label {
 }
 #menu-toggle {display: none;}
 #menu-toggle:checked + #menu {display: block;}
-#menu > li {
+#menu li {
   height: 50px;
   display: block;
   list-style: none;
   text-align: center;
 }
-#menu > li > a {
+#menu li a {
   text-decoration: none;
   display: block;
   color: black;
@@ -55,3 +68,37 @@ nav > label {
 #news-button {background: #009e0f;}
 #founders-button {background: #2b78e4;}
 #contact-button {background: #e06666;}
+
+/*Mobile Founders Page*/
+.founder-profile {
+  width: 80%;
+  padding-left: 10%;
+}
+.founder-name {text-align: center;}
+.founder-photo {
+  max-width: 100%;
+}
+.founder-bio {text-align: center;}
+
+
+
+/*first break point*/
+@media (min-width: 34em) {
+  #menu-toggle, #menu-button {display: none;}
+  nav {width: 100%;}
+  #menu {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+  }
+  #menu li {
+    display: inline-block;
+    text-align: right;
+    margin: 0 -3px;
+  }
+  #menu li a {
+    padding: 15px 20%;
+    margin:0;
+    display: block;
+  }
+}
