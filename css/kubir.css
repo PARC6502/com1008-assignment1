@@ -35,7 +35,10 @@ header > h1 {
   text-align: center;
 }
 
-
+/*Canvas/games*/
+#match-pairs-canvas {
+  width: 100%;
+}
 
 /*Menu for mobile*/
 #menu-button {
