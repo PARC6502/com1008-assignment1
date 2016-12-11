@@ -15,6 +15,7 @@ body {
 main {
   font-size: 0.9em;
   padding: 0 1.5em;
+  width: 100%;
 }
 
 header {
@@ -37,7 +38,7 @@ header > h1 {
 
 /*Canvas/games*/
 #match-pairs-canvas {
-  width: 100%;
+  border: 1px solid red;
 }
 
 /*Menu for mobile*/

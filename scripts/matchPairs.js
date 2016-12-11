@@ -1,19 +1,19 @@
 /* Functions */
 function drawFaceDown(card) {
   context.fillStyle = "#e06666";
-  context.fillRect(card.x, card.y, 70, 70, 10);
-  context.drawImage(faceDown, card.x, card.y, 70, 70);
+  context.fillRect(card.x, card.y, card.width, card.width);
+  context.drawImage(faceDown, card.x, card.y, card.width, card.width);
   card.flipped = false;
 }
 
 function drawFaceUp(card) {
   context.fillStyle = "#e06666";
-  context.fillRect(card.x, card.y, 70, 70, 10);
-  context.drawImage(card.img, card.x, card.y, 70, 70);
+  context.fillRect(card.x, card.y, card.width, card.width);
+  context.drawImage(card.img, card.x, card.y, card.width, card.width);
   card.flipped = true;
 }
 
-function redrawBoard() {
+function drawBoard() {
   for (var i = 0; i < cards.length; i++) {
     drawFaceDown(cards[i]);
   }
@@ -51,9 +51,19 @@ function imageSelector(availableImages, num) {
 }
 
 function generateCards(images) {
+  var imageWidth;
+  if (canvas.width > canvas.height) {
+    imageWidth = canvas.height/(rows+1);
+  } else {
+    imageWidth = canvas.width/(cols+1);
+  }
   for (var i = 0; i < cols; i++) {
     for (var j = 0; j < rows; j++) {
-      cards.push({img: images.pop(), x: i*100 + 10, y: j*80 + 40, flipped: false});
+      cards.push({img: images.pop(),
+                  x: i*(canvas.width/cols) + 10,
+                  y: j*(canvas.height/rows) + 40,
+                  flipped: false,
+                  width: imageWidth});
     }
   }
 }
@@ -69,7 +79,7 @@ function getMouseXY(evt) {
 
   var mx =  Math.round ( evt.clientX - offsetX );
   var my =  Math.round ( evt.clientY - offsetY );
-
+  console.log(mx + ", " + my);
   return {x: mx, y: my};
 }
 
@@ -86,7 +96,7 @@ function flipCard(card) {
   if (card.flipped) {
     return;
   } else if  (flippedCards >= 2) {
-    redrawBoard();
+    drawBoard();
     drawFaceUp(card);
   } else {
     drawFaceUp(card);
@@ -98,18 +108,23 @@ function cardUnderMouse(evt) {
   var pos = getMouseXY(evt);
   for (var i = 0; i < cards.length; i++) {
     var x0 = cards[i].x;
-    var x1 = cards[i].x + 70;
+    var x1 = cards[i].x + cards[i].width;
     var y0 = cards[i].y;
-    var y1 = cards[i].y + 70;
+    var y1 = cards[i].y + cards[i].width;
     if (pos.x >= x0 && pos.x <= x1 && pos.y >= y0 && pos.y <= y1) {
       flipCard(cards[i]);
     }
   }
 }
+function resizeCanvas() {
+  console.log("width: " + window.innerWidth + "height: " + window.innerHeight);
+  canvas.setAttribute("width", window.innerWidth*0.8);
+  canvas.setAttribute("height", window.innerHeight*0.8);
+}
 
 function startGame(images) {
   generateCards(images);
-  redrawBoard();
+  drawBoard();
   canvas.addEventListener('click', function(evt) {
     cardUnderMouse(evt);
   });
@@ -120,6 +135,8 @@ var canvas = document.getElementById('match-pairs-canvas');
 var context = canvas.getContext("2d");
 var cols = 3;
 var rows = 4;
+// var cols = 3;
+// var rows = 4;
 
 var availableImages = ["../images/cat.png",
                       "../images/dog.png",
@@ -143,6 +160,16 @@ var faceDown = new Image();
 faceDown.src = "../images/logo.svg";
 
 /* Main program body */
+resizeCanvas();
+// if (canvas.width > canvas.height) {
+//   cols = 4;
+//   rows = 3;
+// } else {
+//   cols = 3;
+//   rows = 4;
+// }
+window.addEventListener('resize', resizeCanvas);
+console.log("cols: " + cols + ", rows: " + rows);
 preloader(selectedImages, startGame);
 
 
