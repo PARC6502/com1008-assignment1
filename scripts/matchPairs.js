@@ -31,11 +31,32 @@ function drawFaceUp(card) {
 
 function drawBoard() {
   for (var i = 0; i < cards.length; i++) {
-    // console.log(!cards[i].matched)
     if (!cards[i].matched) {
       drawFaceDown(cards[i]);
     }
   }
+}
+
+function redrawBoard() {
+  // used when window is resized
+  var imageWidth;
+  if (canvas.width > canvas.height) {
+    imageWidth = canvas.height/(rows+1);
+  } else {
+    imageWidth = canvas.width/(cols+1);
+  }
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].x = ((cards[i].x-10)*scaleX)+10;
+    cards[i].y = ((cards[i].y-40)*scaleY)+40;
+    cards[i].width = imageWidth;
+    if (!cards[i].matched) {
+      drawFaceDown(cards[i]);
+    } else {
+      drawFaceUp(cards[i]);
+    }
+  }
+  originalWidth = canvas.width;
+  originalHeight = canvas.height;
 }
 
 function preloader(imagesToLoad, callback) {
@@ -150,6 +171,9 @@ function resizeCanvas() {
   console.log("width: " + window.innerWidth + "height: " + window.innerHeight);
   canvas.setAttribute("width", window.innerWidth*0.8);
   canvas.setAttribute("height", window.innerHeight*0.8);
+  scaleX = canvas.width/originalWidth;
+  scaleY = canvas.height/originalHeight;
+  redrawBoard();
 }
 
 function startGame(images) {
@@ -165,7 +189,10 @@ var canvas = document.getElementById('match-pairs-canvas');
 var context = canvas.getContext("2d");
 var cols = 3;
 var rows = 4;
-
+var scaleX = 1.0;
+var scaleY = 1.0;
+var originalWidth = canvas.width;
+var originalHeight = canvas.height;
 var availableImages = ["../images/cat.png",
                       "../images/dog.png",
                       "../images/elephant.png",
