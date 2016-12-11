@@ -1,4 +1,20 @@
 /* Functions */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+function doubleAndShuffle(array) {
+  array.push.apply(array,array);
+  shuffleArray(array);
+  return array;
+}
+
 function drawFaceDown(card) {
   context.fillStyle = "#e06666";
   context.fillRect(card.x, card.y, card.width, card.width);
@@ -29,7 +45,7 @@ function preloader(imagesToLoad, callback) {
     preloadedImages[i] = new Image();
     preloadedImages[i].onload = function() {
       counter++;
-      if (counter==imagesToLoad.length) callback(preloadedImages, 6);
+      if (counter==imagesToLoad.length) callback(doubleAndShuffle(preloadedImages));
     }
     preloadedImages[i].src = imagesToLoad[i];
   }
@@ -37,23 +53,17 @@ function preloader(imagesToLoad, callback) {
 
 function imageSelector(availableImages, num) {
   // selects num images from availableImages
-  // selected = [];
+  selected = [];
   for (var i = 0; i < num; i++) {
     // select random image
     var randomIndex = Math.floor((Math.random()*availableImages.length));
-    console.log(randomIndex);
-    var image = availableImages[randomIndex];
-    // place 2 copies in array
-    selectedImages.push(image);
-    selectedImages.push(image);
-    // remove from array
+    var imageSrc = availableImages[randomIndex];
+    // place in selected array
+    selected.push(imageSrc);
+    // remove from availableImages so it's not selected again
     availableImages.splice(randomIndex,1);
   }
-  // console.log(selectedImages.length);
-  selectedImages.sort(function(){
-    return 0.5 - Math.random();
-  });
-  startGame(selectedImages);
+  return selected;
 }
 
 function generateCards(images) {
@@ -135,6 +145,7 @@ function cardUnderMouse(evt) {
     }
   }
 }
+
 function resizeCanvas() {
   console.log("width: " + window.innerWidth + "height: " + window.innerHeight);
   canvas.setAttribute("width", window.innerWidth*0.8);
@@ -154,8 +165,6 @@ var canvas = document.getElementById('match-pairs-canvas');
 var context = canvas.getContext("2d");
 var cols = 3;
 var rows = 4;
-// var cols = 3;
-// var rows = 4;
 
 var availableImages = ["../images/cat.png",
                       "../images/dog.png",
@@ -173,8 +182,7 @@ var availableImages = ["../images/cat.png",
                       "../images/ladybug.png",
                       "../images/mantis.png"];
 
-var selectedImages = [];
-// imageSelector(availableImages, (cols*rows)/2 );
+var selectedImages = imageSelector(availableImages, (cols*rows)/2 );
 var cards =  [];
 // var flippedCards = [];
 var faceDown = new Image();
@@ -191,6 +199,6 @@ resizeCanvas();
 // }
 window.addEventListener('resize', resizeCanvas);
 console.log("cols: " + cols + ", rows: " + rows);
-preloader(availableImages, imageSelector);
+preloader(selectedImages, startGame);
 // console.log(selectedImages);
 // startGame(selectedImages);
