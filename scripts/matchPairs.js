@@ -1,21 +1,24 @@
 /* Functions */
 function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
+  // randomly shuffles an array in place
+  for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+  return array;
 }
 
 function doubleAndShuffle(array) {
-  array.push.apply(array,array);
+  // array is copied and added to itself then shuffled in place
+  array.push.apply(array, array);
   shuffleArray(array);
   return array;
 }
 
 function drawFaceDown(card) {
+  // draws card face down
   context.fillStyle = "#e06666";
   context.fillRect(card.x, card.y, card.width, card.width);
   context.drawImage(faceDown, card.x, card.y, card.width, card.width);
@@ -23,6 +26,7 @@ function drawFaceDown(card) {
 }
 
 function drawFaceUp(card) {
+  // draws card face up
   context.fillStyle = "#e06666";
   context.fillRect(card.x, card.y, card.width, card.width);
   context.drawImage(card.img, card.x, card.y, card.width, card.width);
@@ -30,6 +34,7 @@ function drawFaceUp(card) {
 }
 
 function drawBoard() {
+  // draws cards face down if they haven't been matched
   for (var i = 0; i < cards.length; i++) {
     if (!cards[i].matched) {
       drawFaceDown(cards[i]);
@@ -38,28 +43,31 @@ function drawBoard() {
 }
 
 function redrawBoard() {
-  // used when window is resized
-  var imageWidth;
+  // used when window is resized, adjust image position and dimensions in line
+  // with new canvas size
+  var imageWidth; // calculate new dimensions
   if (canvas.width > canvas.height) {
     imageWidth = canvas.height/(rows+1);
   } else {
     imageWidth = canvas.width/(cols+1);
   }
   for (var i = 0; i < cards.length; i++) {
-    cards[i].x = ((cards[i].x-10)*scaleX)+10;
-    cards[i].y = ((cards[i].y-40)*scaleY)+40;
-    cards[i].width = imageWidth;
+    cards[i].x = ((cards[i].x-10)*scaleX)+10; // change x position
+    cards[i].y = ((cards[i].y-40)*scaleY)+40; // change y position
+    cards[i].width = imageWidth; // change dimensions
     if (!cards[i].matched) {
       drawFaceDown(cards[i]);
     } else {
       drawFaceUp(cards[i]);
     }
   }
+  // reset original width and height so scaling works properly
   originalWidth = canvas.width;
   originalHeight = canvas.height;
 }
 
 function preloader(imagesToLoad, callback) {
+  // preloads images and sends them to start game doubled and shuffled
   var preloadedImages = [];
   counter = 0;
   for (var i = 0; i < imagesToLoad.length; i++) {
@@ -88,6 +96,9 @@ function imageSelector(availableImages, num) {
 }
 
 function generateCards(images) {
+  // Generates cards. Each card is an object with x, y, flipped, matched and
+  // width properties.
+  // Image width is calculated based on canvas size.
   var imageWidth;
   if (canvas.width > canvas.height) {
     imageWidth = canvas.height/(rows+1);
@@ -107,6 +118,7 @@ function generateCards(images) {
 }
 
 function getMouseXY(evt) {
+  // Returns x,y coordinates of mouse in canvas
   var boundingRect = canvas.getBoundingClientRect();
   var offsetX = boundingRect.left;
   var offsetY = boundingRect.top;
@@ -117,34 +129,34 @@ function getMouseXY(evt) {
 
   var mx =  Math.round ( evt.clientX - offsetX );
   var my =  Math.round ( evt.clientY - offsetY );
-  console.log(mx + ", " + my);
   return {x: mx, y: my};
 }
 
 function countFlippedCards() {
+  // Counts flipped cards, flips them back if 2 cards are flipped and checks if
+  // flipped cards match
   var count = 0;
-  var cardInds = []
+  var cardInds = [] // index of flipped cards is placed here
+  // count flipped cards
   for (var i = 0; i < cards.length; i++) {
     if (cards[i].flipped && !cards[i].matched) {
       count++;
       cardInds.push(i);
-      // console.log(cardInds[0]);
     }
   }
+  // check if cards match
   if (count == 2 && cards[cardInds[0]].img == cards[cardInds[1]].img) {
     cards[cardInds[0]].matched = true;
     cards[cardInds[1]].matched = true;
     count = 0;
   } else if (count == 2) {
-    // console.log("cardInds 1" + cardInds[0]);
-    // console.log("cardInds 2" + cardInds[1]);
-    // console.log("do they match? " + cards[cardInds[0]].img + cards[cardInds[1]].img);
     setTimeout(drawBoard, 750);
   }
   return count;
 }
 
 function flipCard(card) {
+  // flips card
   flippedCards = countFlippedCards();
   if (card.flipped || flippedCards.length >= 2) {
     return;
@@ -155,6 +167,7 @@ function flipCard(card) {
 }
 
 function cardUnderMouse(evt) {
+  // checks if card is under mouse
   var pos = getMouseXY(evt);
   for (var i = 0; i < cards.length; i++) {
     var x0 = cards[i].x;
@@ -168,7 +181,8 @@ function cardUnderMouse(evt) {
 }
 
 function resizeCanvas() {
-  console.log("width: " + window.innerWidth + "height: " + window.innerHeight);
+  // resizes canvas when window changes size
+  // has to be done here instead of CSS otherwise mouse position is off
   canvas.setAttribute("width", window.innerWidth*0.8);
   canvas.setAttribute("height", window.innerHeight*0.8);
   scaleX = canvas.width/originalWidth;
@@ -177,6 +191,7 @@ function resizeCanvas() {
 }
 
 function startGame(images) {
+  // this function is used as a callback for the preloader
   generateCards(images);
   drawBoard();
   canvas.addEventListener('click', function(evt) {
@@ -211,7 +226,6 @@ var availableImages = ["../images/cat.png",
 
 var selectedImages = imageSelector(availableImages, (cols*rows)/2 );
 var cards =  [];
-// var flippedCards = [];
 var faceDown = new Image();
 faceDown.src = "../images/logo.svg";
 
@@ -225,7 +239,4 @@ resizeCanvas();
 //   rows = 4;
 // }
 window.addEventListener('resize', resizeCanvas);
-console.log("cols: " + cols + ", rows: " + rows);
 preloader(selectedImages, startGame);
-// console.log(selectedImages);
-// startGame(selectedImages);
