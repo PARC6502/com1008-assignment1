@@ -15,7 +15,10 @@ function drawFaceUp(card) {
 
 function drawBoard() {
   for (var i = 0; i < cards.length; i++) {
-    drawFaceDown(cards[i]);
+    // console.log(!cards[i].matched)
+    if (!cards[i].matched) {
+      drawFaceDown(cards[i]);
+    }
   }
 }
 
@@ -26,7 +29,7 @@ function preloader(imagesToLoad, callback) {
     preloadedImages[i] = new Image();
     preloadedImages[i].onload = function() {
       counter++;
-      if (counter==imagesToLoad.length) callback(preloadedImages);
+      if (counter==imagesToLoad.length) callback(preloadedImages, 6);
     }
     preloadedImages[i].src = imagesToLoad[i];
   }
@@ -34,20 +37,23 @@ function preloader(imagesToLoad, callback) {
 
 function imageSelector(availableImages, num) {
   // selects num images from availableImages
-  selected = [];
+  // selected = [];
   for (var i = 0; i < num; i++) {
     // select random image
-    var randomIndex = Math.floor(Math.random(availableImages.length));
+    var randomIndex = Math.floor((Math.random()*availableImages.length));
+    console.log(randomIndex);
     var image = availableImages[randomIndex];
     // place 2 copies in array
-    selected.push(image);
-    selected.push(image);
+    selectedImages.push(image);
+    selectedImages.push(image);
     // remove from array
     availableImages.splice(randomIndex,1);
   }
-  return selected.sort(function(){
+  // console.log(selectedImages.length);
+  selectedImages.sort(function(){
     return 0.5 - Math.random();
   });
+  startGame(selectedImages);
 }
 
 function generateCards(images) {
@@ -63,6 +69,7 @@ function generateCards(images) {
                   x: i*(canvas.width/cols) + 10,
                   y: j*(canvas.height/rows) + 40,
                   flipped: false,
+                  matched: false,
                   width: imageWidth});
     }
   }
@@ -84,24 +91,36 @@ function getMouseXY(evt) {
 }
 
 function countFlippedCards() {
-  count = 0;
+  var count = 0;
+  var cardInds = []
   for (var i = 0; i < cards.length; i++) {
-    if (cards[i].flipped) {count++;}
+    if (cards[i].flipped && !cards[i].matched) {
+      count++;
+      cardInds.push(i);
+      // console.log(cardInds[0]);
+    }
+  }
+  if (count == 2 && cards[cardInds[0]].img == cards[cardInds[1]].img) {
+    cards[cardInds[0]].matched = true;
+    cards[cardInds[1]].matched = true;
+    count = 0;
+  } else if (count == 2) {
+    // console.log("cardInds 1" + cardInds[0]);
+    // console.log("cardInds 2" + cardInds[1]);
+    // console.log("do they match? " + cards[cardInds[0]].img + cards[cardInds[1]].img);
+    setTimeout(drawBoard, 750);
   }
   return count;
 }
 
 function flipCard(card) {
   flippedCards = countFlippedCards();
-  if (card.flipped || flippedCards >= 2) {
+  if (card.flipped || flippedCards.length >= 2) {
     return;
   } else {
     drawFaceUp(card);
   }
   flippedCards = countFlippedCards();
-  if (flippedCards == 2) {
-    setTimeout(drawBoard, 750);
-  }
 }
 
 function cardUnderMouse(evt) {
@@ -154,8 +173,10 @@ var availableImages = ["../images/cat.png",
                       "../images/ladybug.png",
                       "../images/mantis.png"];
 
-var selectedImages = imageSelector(availableImages, (cols*rows)/2 );
+var selectedImages = [];
+// imageSelector(availableImages, (cols*rows)/2 );
 var cards =  [];
+// var flippedCards = [];
 var faceDown = new Image();
 faceDown.src = "../images/logo.svg";
 
@@ -170,110 +191,6 @@ resizeCanvas();
 // }
 window.addEventListener('resize', resizeCanvas);
 console.log("cols: " + cols + ", rows: " + rows);
-preloader(selectedImages, startGame);
-
-
-
-
-// // function draw(context) {
-//   // var img = new Image();
-// //   img.onload = function() {
-// //     context.drawImage (img,50,50);
-// //   }
-// //   img.src = "../images/logo.svg";
-// // }
-// //
-// // var canvas = document.getElementById('match-pairs-canvas');
-// // var context = canvas.getContext("2d");
-// //
-// // draw(context);
-// function loadImages(context, fileNames, callback, cols, rows, cards) {
-//   var preloadedImages = [];
-//   counter = 0;
-//   for (var i = 0; i < imageArray.length; i++) {
-//     preloadedImages[i] = new Image();
-//     preloadedImages[i].onload = function() {
-//       counter++;
-//       if (counter==fileNames.length) callback(cols, rows, cards, preloadedImages);
-//     }
-//     preloadedImages[i].src = fileNames[i];
-//   }
-// }
-//
-// function selectImages(filenames) {
-//   selected = [];
-//   for (var i = 0; i < 12; i++) {
-//     // select random image
-//     var randomIndex = floor(random(filenames.length));
-//     var face = filenames[randomIndex];
-//     // place 2 copies in array
-//     selected.push(face);
-//     selected.push(face);
-//     // remove from array
-//     filenames.splice(randomIndex,1);
-//   }
-//   return selected.sort(function(){
-//     return 0.5 - random();
-//   });
-// }
-//
-// var Card = function(x, y, face) {
-//   this.x = x;
-//   this.y = y;
-//   this.face = face;
-//   this.width = 70;
-// }
-//
-// Card.prototype.drawFaceDown = function(context, img) {
-//   context.drawImage(img, this.x, this.y, this.width, this.width);
-// }
-//
-// Card.prototype.drawFaceUp = function(context) {
-//   context.drawImage(this.face, this.x, this.y, this.width, this.width);
-// }
-//
-// function generateCards(cols, rows, cards, selectedFaces) {
-//   for (var i = 0; i < COLS; i++) {
-//     for (var j = 0; j < ROWS; j++) {
-//       cards.push(new Card(i*100 + 10, j*80 + 40, selectedFaces.pop() ));
-//     }
-//   }
-// }
-//
-// var canvas = document.getElementById('match-pairs-canvas');
-// var context = canvas.getContext("2d");
-//
-//
-// var fileNames = ["../images/cat.png",
-//                 "../images/dog.png",
-//                 "../images/elephant.png",
-//                 "../images/giraffe.png",
-//                 "../images/hamster.png",
-//                 "../images/monkey.png",
-//                 "../images/parrot.png",
-//                 "../images/penguin.png",
-//                 "../images/rhino.png",
-//                 "../images/turtle.png",
-//                 "../images/ant.png",
-//                 "../images/cricket.png",
-//                 "../images/dragon_fly.png",
-//                 "../images/ladybug.png",
-//                 "../images/mantis.png"];
-//
-// var COLS = 3;
-// var ROWS = 4;
-// var cards = [];
-// selectedFaces = selectImages(fileNames);
-// loadImages(context, selectedFaces, generateCards, COLS, ROWS, cards);
-// for (var i = 0; i < cards.length; i++) {
-//     cards[i].drawFaceUp(context);
-//   }
-//
-// var logo = new Image();
-// logo.src = "../images/logo.svg";
-//
-// // logo.onload = function() {
-// //   for (var i = 0; i < cards.length; i++) {
-// //     cards[i].drawFaceUp(context);
-// //   }
-// // }
+preloader(availableImages, imageSelector);
+// console.log(selectedImages);
+// startGame(selectedImages);
