@@ -93,15 +93,15 @@ function countFlippedCards() {
 
 function flipCard(card) {
   flippedCards = countFlippedCards();
-  if (card.flipped) {
+  if (card.flipped || flippedCards >= 2) {
     return;
-  } else if  (flippedCards >= 2) {
-    drawBoard();
-    drawFaceUp(card);
   } else {
     drawFaceUp(card);
   }
-
+  flippedCards = countFlippedCards();
+  if (flippedCards == 2) {
+    setTimeout(drawBoard, 750);
+  }
 }
 
 function cardUnderMouse(evt) {
