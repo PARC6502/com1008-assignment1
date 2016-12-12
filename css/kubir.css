@@ -15,7 +15,7 @@ body {
 main {
   font-size: 0.9em;
   padding: 0 1.5em;
-  width: 100%;
+  width: 90%;
 }
 
 header {
@@ -128,4 +128,12 @@ header > h1 {
   .founder-bio {
     display: inline-block;
     max-width: 55%;}
+}
+
+@media (min-width: 51em) {
+  main {
+    max-width: 50%;
+    padding: 0 25%;
+    font-size: 1.2em;
+  }
 }
