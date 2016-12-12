@@ -35,6 +35,10 @@ header > h1 {
   /*padding-le: 5%;*/
   text-align: center;
 }
+#game-promo img {
+  width: 100%;
+  padding: 3% 0;
+}
 
 /*Canvas/games*/
 #match-pairs-canvas {
