@@ -101,8 +101,8 @@ header > h1 {
 @media (min-width: 34em) {
   main {
     font-size: 1em;
-    max-width: 51em;
-    padding: 0 2.5em;
+    width: 80%;
+    padding: 0 10%;
   }
   /*Menu*/
   #menu-toggle, #menu-button {display: none;}
@@ -135,6 +135,13 @@ header > h1 {
 }
 
 @media (min-width: 51em) {
+  #logo {
+    padding-left: 5%;
+  }
+  header h1 {
+    max-width: 90%;
+    margin-left: 0;
+  }
   main {
     max-width: 50%;
     padding: 0 25%;
