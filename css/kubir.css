@@ -17,6 +17,9 @@ main {
   padding: 0 1.5em;
   width: 90%;
 }
+main h1 {
+  text-align: center;
+}
 
 header {
   height: 150px;
@@ -92,10 +95,12 @@ header > h1 {
 .founder-name {text-align: center;}
 .founder-photo {
   max-width: 100%;
+  /*width: 80%;*/
+  /*padding: 0 10%;*/
 }
 .founder-bio {text-align: center;}
 
-
+.game-link img {max-width: 100%;}
 
 /*first break point*/
 @media (min-width: 34em) {
@@ -125,6 +130,8 @@ header > h1 {
   /*Founders*/
   .founder-photo {
     max-width: 40%;
+    /*width: auto;*/
+    /*padding: inherit;*/
     display: inline-block;
     /*float: left;*/
   }
