@@ -141,6 +141,8 @@ header > h1 {
     max-width: 55%;}
 }
 
+article img {max-width: 100%;}
+
 @media (min-width: 51em) {
   #logo {
     padding-left: 5%;
